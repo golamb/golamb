@@ -4,6 +4,10 @@
 
 ```sh
 golamb init simple my-lambda
+# edit deploy.sh for your lambda function
+cd my-lambda
+./build.sh
+./deploy.sh
 ```
 
 ## CONTRIBUTE

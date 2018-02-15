@@ -1,5 +1,11 @@
 # golamb-cli
 
+## USAGE
+
+```sh
+golamb init simple my-lambda
+```
+
 ## CONTRIBUTE
 
 ```sh

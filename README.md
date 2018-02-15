@@ -3,9 +3,7 @@
 ## CONTRIBUTE
 
 ```sh
-go get github.com/golamb/golamb-cli
-cd $GOPATH/src/github.com/golamb
-mv golamb-cli golamb
-cd golamb
+go get github.com/golamb/golamb
+cd $GOPATH/src/github.com/golamb/golamb
 go install
 ```

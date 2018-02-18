@@ -45,24 +45,19 @@ func main() {
 
 func createProject(dir string, projectName string, projectType string) {
 	switch projectType {
-	case "net":
-		githubURL := "https://github.com/golamb/golamb-simple-template.git"
+	case "api-gateway":
+		githubURL := "https://github.com/golamb/golamb-api-gateway-template.git"
 		cmd := exec.Command("git", "clone", githubURL, projectName)
 		err := cmd.Run()
-		if err == nil {
-			removeUselessFile(dir, projectName)
-			fmt.Printf("cd %s\ndep ensure\n", projectName)
-		}
+		ifErrTrue(dir, projectName, err)
+
 	case "simple":
 		githubURL := "https://github.com/golamb/golamb-simple-template.git"
 		cmd := exec.Command("git", "clone", githubURL, projectName)
 		err := cmd.Run()
-		if err == nil {
-			removeUselessFile(dir, projectName)
-			fmt.Printf("cd %s\ndep ensure\n", projectName)
-		}
+		ifErrTrue(dir, projectName, err)
 	default:
-		fmt.Printf("Project not found!!")
+		fmt.Printf("Template 404 not found!!")
 	}
 }
 
@@ -70,4 +65,11 @@ func removeUselessFile(dir string, projectName string) {
 	gitFolderInProject := "./" + projectName + "/.git"
 	rm := exec.Command("rm", "-rf", gitFolderInProject)
 	rm.Run()
+}
+
+func ifErrTrue(dir, projectName string, err error) {
+	if err == nil {
+		removeUselessFile(dir, projectName)
+		fmt.Printf("cd %s\ndep ensure\n", projectName)
+	}
 }

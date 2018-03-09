@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"regexp"
@@ -91,7 +90,6 @@ func removeUselessFile(dir string, projectName string) {
 
 func updateDeployScritp(projectName string) {
 	reads, _ := readLines("./" + projectName + "/deploy.sh")
-	log.Println(reads)
 	var newDeploy []string
 	for _, readline := range reads {
 		matched, _ := regexp.MatchString("<PROJECT_NAME>", readline)
@@ -101,7 +99,6 @@ func updateDeployScritp(projectName string) {
 			newDeploy = append(newDeploy, readline)
 		}
 	}
-	log.Println(newDeploy)
 	writeLines(newDeploy, "./"+projectName+"/deploy.sh")
 }
 

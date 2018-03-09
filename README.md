@@ -1,6 +1,11 @@
 # golamb-cli
 
-## USAGE
+## Install
+```sh
+go get -u github.com/golamb/golamb
+```
+
+## Usage
 
 ```sh
 golamb init simple my-lambda

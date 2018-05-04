@@ -8,8 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"bufio"
-
+	"github.com/golamb/golamb/utils"
 	"github.com/urfave/cli"
 )
 
@@ -18,11 +17,11 @@ func main() {
 	app.Name = "golamb"
 	app.Usage = "CLI for create project of lambda with golang from https://github.com/golamb"
 	app.Action = func(c *cli.Context) error {
-		fmt.Printf("Hello friend!\nThis is Project for create aws-lambda-go\nRead Doc at https://github.com/aws/aws-lambda-go/\n")
+		fmt.Printf("This is Project for create aws-lambda-go\n")
 		return nil
 	}
 	app.CommandNotFound = func(c *cli.Context, command string) {
-		fmt.Fprintf(c.App.Writer, "Thar be no %q here.\n", command)
+		fmt.Fprintf(c.App.Writer, "%q not found.\n", command)
 	}
 
 	app.Commands = []cli.Command{
@@ -48,19 +47,14 @@ func main() {
 }
 
 func createProject(dir string, projectName string, projectType string) {
-	switch projectType {
-	case "api-gateway":
-		githubURL := "https://github.com/golamb/golamb-api-gateway-template.git"
-		err := cloneProjectTemplate(githubURL, projectName)
-		afterClone(dir, projectName, err)
 
-	case "simple":
-		githubURL := "https://github.com/golamb/golamb-simple-template.git"
+	githubURL := templateProject[projectType]
+	if githubURL != "" {
 		err := cloneProjectTemplate(githubURL, projectName)
 		afterClone(dir, projectName, err)
-	default:
-		fmt.Printf("Template 404 not found!!")
+		return
 	}
+	fmt.Printf("Template 404 not found!!")
 }
 
 func cloneProjectTemplate(githubURL, projectName string) error {
@@ -89,7 +83,7 @@ func removeUselessFile(dir string, projectName string) {
 }
 
 func updateDeployScritp(projectName string) {
-	reads, _ := readLines("./" + projectName + "/deploy.sh")
+	reads, _ := utils.ReadLines("./" + projectName + "/deploy.sh")
 	var newDeploy []string
 	for _, readline := range reads {
 		matched, _ := regexp.MatchString("<PROJECT_NAME>", readline)
@@ -99,34 +93,5 @@ func updateDeployScritp(projectName string) {
 			newDeploy = append(newDeploy, readline)
 		}
 	}
-	writeLines(newDeploy, "./"+projectName+"/deploy.sh")
-}
-
-func readLines(path string) ([]string, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines, scanner.Err()
-}
-
-func writeLines(lines []string, path string) error {
-	file, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	w := bufio.NewWriter(file)
-	for _, line := range lines {
-		fmt.Fprintln(w, line)
-	}
-	return w.Flush()
+	utils.WriteLines(newDeploy, "./"+projectName+"/deploy.sh")
 }
